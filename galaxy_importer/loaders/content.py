@@ -229,11 +229,11 @@ class RoleLoader(ContentLoader):
         proc.wait()
 
         for line in proc.stdout:
-            self.log.warning(line.strip())
+            self.log.info(line.strip())
 
         for line in proc.stderr:
             if line.startswith(constants.ANSIBLE_LINT_ERROR_PREFIXES):
-                self.log.error(line.rstrip())
+                self.log.warning(line.rstrip())
 
     def _get_readme(self):
         readme = markup_utils.get_readme_doc_file(os.path.join(self.root, self.rel_path))
@@ -246,7 +246,7 @@ class RoleLoader(ContentLoader):
         meta_path = self._find_metadata_file_path(self.root, self.rel_path)
 
         if not meta_path:
-            self.log.warning("Could not get role description, no role metadata found")
+            self.log.info("Could not get role description, no role metadata found")
             return description
 
         with open(meta_path) as fp:
@@ -257,7 +257,7 @@ class RoleLoader(ContentLoader):
         try:
             description = role_metadata["galaxy_info"]["description"]
         except KeyError:
-            self.log.warning("No role description found in role metadata")
+            self.log.info("No role description found in role metadata")
         return description
 
     @staticmethod
